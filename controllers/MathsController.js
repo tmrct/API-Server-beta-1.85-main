@@ -10,25 +10,47 @@ export default class MathsController extends Controller {
     }
 
     async handleRequest() {
-        const { req } = this.HttpContext; 
-        const { params } = decomposePath(req.url); 
+        const { req } = this.HttpContext;
+        const { params } = decomposePath(req.url);
 
-        const { op, x, y, n } = params || {}; 
-        
+        const { op, x, y, n } = params || {};
+
         if (!op) {
-            return this.HttpContext.response.badRequest("Missing 'op' parameter");
+            return this.HttpContext.response.json({ op, x, y, n, error: "Missing 'op' parameter" });
         }
 
-        let numX = Number(x);
-        let numY = Number(y);
-        let numN = Number(n);
+        let numX = x !== undefined ? Number(x) : undefined;
+        let numY = y !== undefined ? Number(y) : undefined;
+        let numN = n !== undefined ? Number(n) : undefined;
+
+        if (['+', '-', '*', '/', '%'].includes(op)) {
+            if (isNaN(numX)) {
+                return this.HttpContext.response.json({ op, x, y, n, error: "'x' parameter is not a number" });
+            }
+            if (isNaN(numY)) {
+                return this.HttpContext.response.json({ op, x, y, n, error: "'y' parameter is not a number" });
+            }
+        }
+
+        if (['!', 'p', 'np'].includes(op) && isNaN(numN)) {
+            return this.HttpContext.response.json({ op, x, y, n, error: "'n' parameter is not a number" });
+        }
+
+        if (['+', '-', '*', '/', '%'].includes(op) && n !== undefined) {
+            return this.HttpContext.response.json({ op, x, y, n, error: "Unexpected 'n' parameter" });
+        }
+
+        if (['!', 'p', 'np'].includes(op) && (x !== undefined || y !== undefined)) {
+            return this.HttpContext.response.json({ op, x, y, n, error: "Unexpected 'x' or 'y' parameters for unary operation" });
+        }
+
         let result;
 
         try {
             switch (op) {
                 case ' ':
                     result = this.model.add(numX, numY);
-                    break;
+                    return this.HttpContext.response.json({ op:"+", x: numX, y: numY, n: numN, value: result });
                 case '-':
                     result = this.model.subtract(numX, numY);
                     break;
@@ -36,21 +58,33 @@ export default class MathsController extends Controller {
                     result = this.model.multiply(numX, numY);
                     break;
                 case '/':
+                    if (numX === 0 && numY === 0) {
+                        return this.HttpContext.response.json({ op, x: numX, y: numY, n: numN, error: "NaN" });
+                    }
                     if (numY === 0) {
-                        throw new Error("Division by zero");
+                        return this.HttpContext.response.json({ op, x: numX, y: numY, n: numN, error: "infinity" });
                     }
                     result = this.model.divide(numX, numY);
                     break;
                 case '%':
+                    if (numX === 0 && numY === 0) {
+                        return this.HttpContext.response.json({ op, x: numX, y: numY, n: numN, error: "NaN" });
+                    }
                     if (numY === 0) {
-                        throw new Error("Modulo by zero");
+                        return this.HttpContext.response.json({ op, x: numX, y: numY, n: numN, error: "modulo by zero" });
                     }
                     result = this.model.modulo(numX, numY);
                     break;
                 case '!':
+                    if (numN <= 0) {
+                        return this.HttpContext.response.json({ op, x: numX, y: numY, n: numN, error: "n must be > 0" });
+                    }
                     result = this.model.factorial(numN);
                     break;
                 case 'p':
+                    if (numN <= 0) {
+                        return this.HttpContext.response.json({ op, x: numX, y: numY, n: numN, error: "n must be > 0" });
+                    }
                     result = this.model.isPrime(numN);
                     break;
                 case 'np':
@@ -60,7 +94,6 @@ export default class MathsController extends Controller {
                     return this.HttpContext.response.badRequest("Invalid operation");
             }
 
-            // Send a successful response with the result
             return this.HttpContext.response.json({ op, x: numX, y: numY, n: numN, value: result });
 
         } catch (err) {
