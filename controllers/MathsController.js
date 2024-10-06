@@ -23,7 +23,7 @@ export default class MathsController extends Controller {
         let numY = y !== undefined ? Number(y) : undefined;
         let numN = n !== undefined ? Number(n) : undefined;
 
-        if (['+', '-', '*', '/', '%'].includes(op)) {
+        if (['+', '-', '*', '/', '%'].includes(op) || op==' ') {
             if (isNaN(numX)) {
                 return this.HttpContext.response.json({ op, x, y, n, error: "'x' parameter is not a number" });
             }
@@ -49,19 +49,6 @@ export default class MathsController extends Controller {
         try {
             switch (op) {
                 case ' ':
-                    let errorText ="";
-                    if(numX == undefined && numY == undefined){
-                        errorText = "Manque les paramètres x et y";
-                    }
-                    else if(numX == undefined){
-                        errorText = "Manque le paramètre x";
-                    }
-                    else if(numY == undefined){
-                        errorText = "Manque le paramètre y";
-                    }
-                    if(errorText != ""){
-                        return this.HttpContext.response.json({ op:"+", x: numX, y: numY, n: numN, error: errorText });
-                    }
                     result = this.model.add(numX, numY);
                     return this.HttpContext.response.json({ op:"+", x: numX, y: numY, n: numN, value: result });
                 case '-':

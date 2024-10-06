@@ -24,7 +24,7 @@ function addTest(operation){
     }
     $("#content").append(
         $(`
-            <div>
+            <div id="operation">
                 OK ---> ${ operation }
             </div>
         `)
@@ -36,7 +36,7 @@ function renderResultText(){
     $("#result").text('');
     let texte = "";
     if(compteurOpérations!=0 && compteurErreurs ==0){
-        texte="Bravo! Aucune erreur!"
+        texte="Bravo! Aucun problème!"
     }
     else if(compteurErreurs ==1){
         texte = `${compteurErreurs} erreur`
@@ -45,30 +45,4 @@ function renderResultText(){
         texte = `${compteurErreurs} erreurs`
     }
     $("#result").text(`${texte}`);
-}
-function renderError(message) {
-    eraseContent();
-    $("#content").append(
-        $(`
-            <div class="errorContainer">
-                ${message}
-            </div>
-        `)
-    );
-}
-function getFormData($form) {
-    const removeTag = new RegExp("(<[a-zA-Z0-9]+>)|(</[a-zA-Z0-9]+>)", "g");
-    var jsonObject = {};
-    $.each($form.serializeArray(), (index, control) => {
-        jsonObject[control.name] = control.value.replace(removeTag, "");
-    });
-    return jsonObject;
-}
-
-function renderOperation(mathOperation) {
-    return $(`
-            <div>
-                <span></span>
-            </div>
-    `);
 }
