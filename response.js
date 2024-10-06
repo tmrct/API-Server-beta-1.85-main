@@ -33,7 +33,25 @@ export default class Response {
     json(obj) {                         // ok status with content
         this.res.writeHead(200, { 'content-type': 'application/json' });
         if (obj) {
-            let json = JSON.stringify(obj);
+            let json = 0;
+            if(obj.value == "?"){
+                const examples = [
+                    {GET : "Maths endpoint"},
+                    // { :"List of possible query strings:"},
+                    {return : {op:"+",x:"number",y:"number",value:"x+y"}},
+                    {op:"-",x:"number",y:"number",value:"x+y"},
+                    {op:"*",x:"number",y:"number",value:"x+y"},
+                    {op:"/",x:"number",y:"number",value:"x+y"},
+                    {op:"%",x:"number",y:"number",value:"x+y"},
+                    {return:{op:"%",n:"integer",value:"n!"}},
+                    {return: {op:"p","n":integer, "value": "true if n is a prime number"}},
+                    {return :{op:"n","n":integer, "value": "nth prime number"}}
+                ];
+                json = JSON.stringify(examples);
+            }
+            else{
+                json = JSON.stringify(obj);
+            }
             return this.end(json);
         } else
             return this.end();

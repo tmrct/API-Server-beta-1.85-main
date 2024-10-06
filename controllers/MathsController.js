@@ -15,7 +15,7 @@ export default class MathsController extends Controller {
 
         const { op, x, y, n } = params || {};
 
-        if (!op) {
+        if (!op && req.url != "/api/maths?") {
             return this.HttpContext.response.json({ op, x, y, n, error: "Missing 'op' parameter" });
         }
 
@@ -49,6 +49,19 @@ export default class MathsController extends Controller {
         try {
             switch (op) {
                 case ' ':
+                    let errorText ="";
+                    if(numX == undefined && numY == undefined){
+                        errorText = "Manque les paramètres x et y";
+                    }
+                    else if(numX == undefined){
+                        errorText = "Manque le paramètre x";
+                    }
+                    else if(numY == undefined){
+                        errorText = "Manque le paramètre y";
+                    }
+                    if(errorText != ""){
+                        return this.HttpContext.response.json({ op:"+", x: numX, y: numY, n: numN, error: errorText });
+                    }
                     result = this.model.add(numX, numY);
                     return this.HttpContext.response.json({ op:"+", x: numX, y: numY, n: numN, value: result });
                 case '-':
@@ -89,6 +102,9 @@ export default class MathsController extends Controller {
                     break;
                 case 'np':
                     result = this.model.findNthPrime(numN);
+                    break;
+                case undefined:
+                    result = "?";
                     break;
                 default:
                     return this.HttpContext.response.badRequest("Invalid operation");
