@@ -39,6 +39,7 @@ export default class Response {
             return this.end();
     }
     HTML(content) {
+        console.log(content);
         this.res.writeHead(200, { 'content-type': 'text/html' });
         return this.end(content);
     }

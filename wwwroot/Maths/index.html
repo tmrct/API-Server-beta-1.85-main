@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opérations mathématiques</title>
+    <link rel="site.webmanifest" href="manifest.json" />
+    <!-- <link rel="icon" href="bookmark_logo.png"> -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="css/mathsUI.css">
+</head>
+<body>
+    <div id="main">
+        <fieldset>
+            <legend>Url du service</legend>
+            <br>
+            <input type="text" style="width: 325px;" value="http://localhost:5000/api/maths/?op=+&x=20&y=52" id="apiOperation"/>
+            <input type="button" value="Démarrer le test" id="beginTest"/>
+            <input type="button" help="http://localhost:5000/api/maths?" value="Aide" id="loadHelp">
+        </fieldset>
+        <br>
+        <fieldset>
+            <legend>Tests</legend>
+            <br>
+            <div id="content">
+                Veuillez faire un test.
+            </div>
+        </fieldset>
+        <br>
+        <fieldset>
+            <legend>Verdict</legend>
+            <br>
+            <div id="result">
+                Veuillez faire un test.
+            </div>
+        </fieldset>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="js/API_Maths.js"></script>
+    <script src="js/siteUI.js"></script>
+
+
+</body>
+
+</html>
