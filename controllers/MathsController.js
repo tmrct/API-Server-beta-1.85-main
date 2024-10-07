@@ -22,6 +22,7 @@ export default class MathsController extends Controller {
                 <title>Math Help</title>
                 </head>
                 <body>
+                <strong>
                 <div>GET: Maths endpoint</div>
                 <div>List of possible query strings:</div>
                 <hr>
@@ -48,6 +49,7 @@ export default class MathsController extends Controller {
                 <br>
                 <div>? op = np & n = integer</div>
                 <div>return {"op":"np","n":integer,"value": nth prime number}</div>
+                </strong>
                 <br>
                 </body>
                 </html>

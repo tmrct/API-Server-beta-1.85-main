@@ -8,12 +8,6 @@ function Init_UI() {
         addTest(maths)
         renderResultText()
     });
-    $("#loadHelp").on('click', async ()=>{
-        let apiOperation = $("#loadHelp").attr("help");
-        const maths = await API_GetMaths(apiOperation);
-        renderHelpText(maths);
-    });
-
 }
 function addTest(operation){
     if(operation.includes("error")){
