@@ -11,7 +11,7 @@ function Init_UI() {
     $("#loadHelp").on('click', async ()=>{
         let apiOperation = $("#loadHelp").attr("help");
         const maths = await API_GetMaths(apiOperation);
-        renderResultText(maths);
+        renderHelpText(maths);
     });
 
 }
@@ -31,8 +31,8 @@ function addTest(operation){
     );
     compteurOpérations++;
 }
-function renderHelpText(){
-
+function renderHelpText(result){
+    
 }
 function renderResultText(){
     $("#result").text('');
