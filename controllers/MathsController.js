@@ -14,8 +14,45 @@ export default class MathsController extends Controller {
         const { params } = decomposePath(req.url);
 
         const { op, x, y, n } = params || {};
-
-        if (!op && req.url != "/api/maths?") {
+        
+        if (req.url == '/api/maths?') {
+            return this.HttpContext.response.HTML(`
+                <html>
+                <head>
+                <title>Math Help</title>
+                </head>
+                <body>
+                <div>GET: Maths endpoint</div>
+                <div>List of possible query strings:</div>
+                <hr>
+                <div>? op = + & x = number & y = number</div>
+                <div>return {"op":"+","x":number,"y":number,"value": x + y}</div>
+                <br>
+                <div>? op = - & x = number & y = number</div>
+                <div>return {"op":"-","x":number,"y":number,"value": x - y}</div>
+                <br>
+                <div>? op = * & x = number & y = number</div>
+                <div>return {"op":"*","x":number,"y":number,"value": x * y}</div>
+                <br>
+                <div>? op = / & x = number & y = number</div>
+                <div>return {"op":"/","x":number,"y":number,"value": x / y}</div>
+                <br>
+                <div>? op = % & x = number & y = number</div>
+                <div>return {"op":"%","x":number,"y":number,"value": x % y}</div>
+                <br>
+                <div>? op = ! & n = integer</div>
+                <div>return {"op":"!","n":integer,"value": n!}</div>
+                <br>
+                <div>? op = p & n = integer</div>
+                <div>return {"op":"p","n":integer,"value": true if n is a prime number}</div>
+                <br>
+                <div>? op = np & n = integer</div>
+                <div>return {"op":"np","n":integer,"value": nth prime number}</div>
+                <br>
+                </body>
+                </html>
+                `);}
+        if (!op) {
             return this.HttpContext.response.json({ op, x, y, n, error: "Missing 'op' parameter" });
         }
 
@@ -23,7 +60,7 @@ export default class MathsController extends Controller {
         let numY = y !== undefined ? Number(y) : undefined;
         let numN = n !== undefined ? Number(n) : undefined;
 
-        if (['+', '-', '*', '/', '%'].includes(op) || op==' ') {
+        if (['+', '-', '*', '/', '%'].includes(op) || op == ' ') {
             if (isNaN(numX)) {
                 return this.HttpContext.response.json({ op, x, y, n, error: "'x' parameter is not a number" });
             }
@@ -50,7 +87,7 @@ export default class MathsController extends Controller {
             switch (op) {
                 case ' ':
                     result = this.model.add(numX, numY);
-                    return this.HttpContext.response.json({ op:"+", x: numX, y: numY, n: numN, value: result });
+                    return this.HttpContext.response.json({ op: "+", x: numX, y: numY, n: numN, value: result });
                 case '-':
                     result = this.model.subtract(numX, numY);
                     break;
@@ -89,9 +126,6 @@ export default class MathsController extends Controller {
                     break;
                 case 'np':
                     result = this.model.findNthPrime(numN);
-                    break;
-                case undefined:
-                    result = "?";
                     break;
                 default:
                     return this.HttpContext.response.badRequest("Invalid operation");
